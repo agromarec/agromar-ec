@@ -10,7 +10,7 @@ import { Role } from './enums/roles.enum';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { RegisterUserDto } from './dto/register-auth.dto';
 import { UserType } from '@prisma/client';
-import { ParseUpperCasePipe } from 'src/common/pipes/parse-upper-case.pipe';
+import { ParseUpperCasePipe } from 'src/common/pipes';
 import { FilterUserDto } from './dto/filter-user.dto';
 import { UpdatePaymentMethodsDto } from './dto/update-payment-methods.dto';
 

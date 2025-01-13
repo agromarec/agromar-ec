@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "@prisma/client": "^5.22.0"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",
@@ -32,7 +33,6 @@
     "@nestjs/platform-socket.io": "^10.4.15",
     "@nestjs/typeorm": "^10.0.2",
     "@nestjs/websockets": "^10.4.15",
-    "@prisma/client": "^5.22.0",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
