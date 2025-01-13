@@ -29,6 +29,9 @@ let OrderController = class OrderController {
     approvePaymentOrder(user, body) {
         return this.paymentService.approvePaymentOrder(user, body.paypalClientId, body.transactionId);
     }
+    paymentByBankTransfer(user) {
+        return this.paymentService.paymentByBankTransfer(user);
+    }
     findAllUserOrders(user) {
         return this.paymentService.findAllUserOrders(Number(user.id));
     }
@@ -59,6 +62,13 @@ __decorate([
     __metadata("design:paramtypes", [Object, approve_payment_order_dto_1.ApprovePaymentOrderDto]),
     __metadata("design:returntype", void 0)
 ], OrderController.prototype, "approvePaymentOrder", null);
+__decorate([
+    (0, common_1.Post)('/payment/bank-transfer'),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], OrderController.prototype, "paymentByBankTransfer", null);
 __decorate([
     (0, common_1.Get)('/orders'),
     __param(0, (0, get_user_decorator_1.GetUser)()),

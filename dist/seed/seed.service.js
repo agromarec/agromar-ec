@@ -13,13 +13,21 @@ exports.SeedService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../config/db/prisma.service");
 const users_1 = require("./data/users");
+const produts_1 = require("./data/produts");
+const unitMesure_1 = require("./data/unitMesure");
+const sellerEmail = 'gobierno@gobierno.com';
 let SeedService = class SeedService {
     constructor(prismaService) {
         this.user = prismaService.user_ce;
         this.user_roles = prismaService.user_role;
+        this.product = prismaService.product;
+        this.predifined_product = prismaService.predefined_product;
+        this.productCategory = prismaService.product_category;
+        this.unitOfMeasure = prismaService.unit_of_measure;
     }
-    executeAllSeeds() {
-        return 'This action adds a new users';
+    async executeAllSeeds() {
+        await this.executeUsersSeed();
+        await this.executeProductsSeed();
     }
     async executeUsersSeed() {
         await this.user_roles.deleteMany();
@@ -30,6 +38,28 @@ let SeedService = class SeedService {
             });
         }
         return 'Seeded users successfully 🌱';
+    }
+    async executeProductsSeed() {
+        await this.product.deleteMany();
+        await this.predifined_product.deleteMany();
+        await this.productCategory.deleteMany();
+        const user = await this.user.findFirstOrThrow({ where: { email: sellerEmail } });
+        const unitOfMesures = await this.unitOfMeasure.findMany();
+        for (const product of (0, produts_1.GENERATE_PRODUCT_DATA)(Number(user.id), unitOfMesures)) {
+            await this.predifined_product.create({
+                data: product,
+            });
+        }
+        return 'Seeded products successfully 🌱';
+    }
+    async executeUnitOfMeasuresSeed() {
+        await this.unitOfMeasure.deleteMany();
+        for (const unitMesure of unitMesure_1.UNIT_MESURES_SEED) {
+            await this.unitOfMeasure.create({
+                data: unitMesure,
+            });
+        }
+        return 'Seeded unit of measure successfully 🌱';
     }
 };
 exports.SeedService = SeedService;

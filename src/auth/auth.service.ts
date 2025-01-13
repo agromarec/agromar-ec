@@ -13,8 +13,10 @@ import { Role } from './enums/roles.enum';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { RegisterUserDto } from './dto/register-auth.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
-import { Auth } from './decorators';
 import { UpdatePaymentMethodsDto } from './dto/update-payment-methods.dto';
+import { UpdateProductDto } from 'src/product/dto/update-product.dto';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +35,11 @@ export class AuthService {
     if (user) throw new BadRequestException('Usuario ya existe');
 
     createUserDto.password = await hash(createUserDto.password, this.configService.get('PASSWORD_SALT'));
+
+    console.log({ createUserDto });
+
+
+    throw new BadRequestException('Usuario ya existe');
 
     return await this.user.create({
       include: { user_role: { include: { role_ce: { where: { status: Status.Activo } } } } },
@@ -77,7 +84,8 @@ export class AuthService {
         creation_user: 'system',
         pais_ce: { connect: { id_pais: createUserDto.paisId, } },
         canton_ce: { connect: { id: createUserDto.cantonId, } },
-        // user_role: { create: { role_ce: { connect: { id_role: createUserDto.roleId } } } }
+        paypalEmail: createUserDto.paypalEmail,
+        userType: <'EMPRESA' | 'GOBIERNO' | 'EMPRESA'>createUserDto.userType,
         user_role: {
           createMany: {
             data: allowedRoles.map(roleId => ({ roleId }))
@@ -278,5 +286,30 @@ export class AuthService {
       data,
       hasMore,
     };
+  }
+
+
+  updateProfileUserPicture(id: number, user: UserToken, file: Express.Multer.File) {
+    let fileName = null;
+    console.log({ file, id });
+
+    if (file) {
+      const directoryPath = join(__dirname, '..', '..', 'static', 'profile-pictures');
+      if (!existsSync(directoryPath)) mkdirSync(directoryPath, { recursive: true }); // recursively create directory for creaet two the firs static and the second products
+
+      const getUuid = crypto.randomUUID.bind(crypto);
+      const fileExtension = file.mimetype.split('/')[1];
+      fileName = `${getUuid()}.${fileExtension}`;
+      // save file to disk
+      const filePath = join(directoryPath, fileName);
+      writeFileSync(filePath, file.buffer); // Save file manually after validation
+    }
+
+    return this.user.update({
+      where: { id },
+      data: {
+        profilePicture: fileName,
+      },
+    });
   }
 }

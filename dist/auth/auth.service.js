@@ -17,6 +17,8 @@ const bcrypt_1 = require("bcrypt");
 const jwt_1 = require("@nestjs/jwt");
 const client_1 = require("@prisma/client");
 const roles_enum_1 = require("./enums/roles.enum");
+const fs_1 = require("fs");
+const path_1 = require("path");
 let AuthService = class AuthService {
     constructor(configService, jwtService, prisma) {
         this.configService = configService;
@@ -28,6 +30,8 @@ let AuthService = class AuthService {
         if (user)
             throw new common_1.BadRequestException('Usuario ya existe');
         createUserDto.password = await (0, bcrypt_1.hash)(createUserDto.password, this.configService.get('PASSWORD_SALT'));
+        console.log({ createUserDto });
+        throw new common_1.BadRequestException('Usuario ya existe');
         return await this.user.create({
             include: { user_role: { include: { role_ce: { where: { status: client_1.Status.Activo } } } } },
             data: {
@@ -68,6 +72,8 @@ let AuthService = class AuthService {
                 creation_user: 'system',
                 pais_ce: { connect: { id_pais: createUserDto.paisId, } },
                 canton_ce: { connect: { id: createUserDto.cantonId, } },
+                paypalEmail: createUserDto.paypalEmail,
+                userType: createUserDto.userType,
                 user_role: {
                     createMany: {
                         data: allowedRoles.map(roleId => ({ roleId }))
@@ -238,6 +244,26 @@ let AuthService = class AuthService {
             data,
             hasMore,
         };
+    }
+    updateProfileUserPicture(id, user, file) {
+        let fileName = null;
+        console.log({ file, id });
+        if (file) {
+            const directoryPath = (0, path_1.join)(__dirname, '..', '..', 'static', 'profile-pictures');
+            if (!(0, fs_1.existsSync)(directoryPath))
+                (0, fs_1.mkdirSync)(directoryPath, { recursive: true });
+            const getUuid = crypto.randomUUID.bind(crypto);
+            const fileExtension = file.mimetype.split('/')[1];
+            fileName = `${getUuid()}.${fileExtension}`;
+            const filePath = (0, path_1.join)(directoryPath, fileName);
+            (0, fs_1.writeFileSync)(filePath, file.buffer);
+        }
+        return this.user.update({
+            where: { id },
+            data: {
+                profilePicture: fileName,
+            },
+        });
     }
 };
 exports.AuthService = AuthService;

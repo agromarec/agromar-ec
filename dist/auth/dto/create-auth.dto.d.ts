@@ -10,4 +10,5 @@ export declare class CreateUserDto {
     userId?: number;
     paypalEmail: string;
     roles: number[];
+    userType?: string;
 }

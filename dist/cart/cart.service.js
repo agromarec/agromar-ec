@@ -19,7 +19,7 @@ let CartService = class CartService {
         this.cartItem = prismaService.cart_item;
     }
     async getUserCart(userId) {
-        const result = await this.cart.findUnique({ where: { user_id: userId }, include: { cart_item: { include: { product: { include: { user_ce: true } } } } } });
+        const result = await this.cart.findUnique({ where: { user_id: userId }, include: { cart_item: { include: { product: { include: { user_ce: true, predefinedProduct: true } } } } } });
         if (!result)
             throw new common_1.NotFoundException('No se encontro el pedido');
         return result;

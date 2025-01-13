@@ -60,7 +60,7 @@ export class CartService {
   // }
 
   async getUserCart(userId: number) {
-    const result = await this.cart.findUnique({ where: { user_id: userId }, include: { cart_item: { include: { product: { include: { user_ce: true } } } } } });
+    const result = await this.cart.findUnique({ where: { user_id: userId }, include: { cart_item: { include: { product: { include: { user_ce: true, predefinedProduct: true } } } } } });
     if (!result) throw new NotFoundException('No se encontro el pedido');
     return result;
   }

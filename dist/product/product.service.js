@@ -19,6 +19,7 @@ const roles_enum_1 = require("../auth/enums/roles.enum");
 let ProductService = class ProductService {
     constructor(prismaService) {
         this.product = prismaService.product;
+        this.user = prismaService.user_ce;
     }
     create(createProductDto, user, file) {
         let fileName = null;
@@ -85,7 +86,7 @@ let ProductService = class ProductService {
         };
     }
     async findAllBySellerId(paginationDto, sellerId) {
-        const { page = 1, size = 10 } = paginationDto;
+        const { page = 1, size = 12 } = paginationDto;
         const products = await this.product.findMany({
             skip: (page - 1) * size,
             take: size,
@@ -113,14 +114,21 @@ let ProductService = class ProductService {
             },
             orderBy: { creation_date: 'desc' },
         });
-        const totalProducts = await this.product.count();
+        const totalProducts = await this.product.count({ where: { seller_id: sellerId, status: client_1.Status.Activo } });
         const totalPages = Math.ceil(totalProducts / size);
         const hasMore = page < totalPages;
+        const sellerInfo = await this.user.findUnique({
+            where: { id: sellerId },
+            select: { name: true, email: true, profilePicture: true, id: true },
+        });
         return {
             totalPages,
             hasMore,
             currentPage: page,
             products,
+            sellerInfo: {
+                ...sellerInfo,
+            }
         };
     }
     findOne(id) {

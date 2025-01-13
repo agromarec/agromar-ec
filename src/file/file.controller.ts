@@ -15,4 +15,17 @@ export class FileController {
 
     res.sendFile(path);
   }
+
+
+  @Get('/profile-pictures/:imageName')
+  findProfileImage(
+    @Res() res: Response,
+    @Param('imageName') imageName: string
+  ) {
+    const path = this.fileService.getStaticProfileImage(imageName);
+
+    res.sendFile(path);
+  }
+
+
 }

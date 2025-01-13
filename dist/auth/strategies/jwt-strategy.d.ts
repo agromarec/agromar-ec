@@ -49,6 +49,7 @@ export declare class JwtStrategy extends JwtStrategy_base {
         allowPaypalPayments: boolean | null;
         allowBankTransfers: boolean | null;
         bankTransfersInfo: string | null;
+        profilePicture: string | null;
     }>;
 }
 export {};

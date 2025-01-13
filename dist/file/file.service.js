@@ -17,6 +17,12 @@ let FileService = class FileService {
             throw new common_1.BadRequestException(`No product found with image ${imageName}`);
         return path;
     }
+    getStaticProfileImage(imageName) {
+        const path = (0, path_1.join)(__dirname, '../../static/profile-pictures', imageName);
+        if (!(0, fs_1.existsSync)(path))
+            throw new common_1.BadRequestException(`No product found with image ${imageName}`);
+        return path;
+    }
 };
 exports.FileService = FileService;
 exports.FileService = FileService = __decorate([

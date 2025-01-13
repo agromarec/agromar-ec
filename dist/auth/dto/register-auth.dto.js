@@ -69,4 +69,9 @@ __decorate([
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "paypalEmail", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], RegisterUserDto.prototype, "userType", void 0);
 //# sourceMappingURL=register-auth.dto.js.map

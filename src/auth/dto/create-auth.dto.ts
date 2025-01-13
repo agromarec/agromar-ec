@@ -51,4 +51,8 @@ export class CreateUserDto {
   @ArrayMinSize(1) // Optionally, enforce a minimum number of items
   @IsNumber({}, { each: true })
   roles: number[];
+
+  @IsString()
+  @IsOptional()
+  userType?: string;
 }

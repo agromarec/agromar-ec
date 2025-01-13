@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, FileTypeValidator, MaxFileSizeValidator, ParseFilePipe, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
@@ -9,10 +9,12 @@ import { UserToken } from './guards';
 import { Role } from './enums/roles.enum';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { RegisterUserDto } from './dto/register-auth.dto';
-import { UserType } from '@prisma/client';
+import { Prisma, UserType } from '@prisma/client';
 import { ParseUpperCasePipe } from '../common/pipes';
 import { FilterUserDto } from './dto/filter-user.dto';
 import { UpdatePaymentMethodsDto } from './dto/update-payment-methods.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdateProductDto } from 'src/product/dto/update-product.dto';
 
 @Controller(['auth', 'users'])
 export class AuthController {
@@ -91,5 +93,25 @@ export class AuthController {
   @Auth(Role.Admin)
   remove(@Param('id') id: string) {
     return this.authService.remove(+id);
+  }
+
+
+  @Patch('profile-pic/:id')
+  @Auth(Role.Admin, Role.Vendedor)
+  @UseInterceptors(FileInterceptor('file'))
+  updateProfileUserPicture(
+    @Param('id') id: string,
+    @GetUser() user: UserToken,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10, message: 'File is too big' }),
+          new FileTypeValidator({ fileType: /^(image\/(jpeg|jpg|png|webp))$/ }),
+        ],
+      })
+    ) file?: Express.Multer.File | undefined
+  ) {
+    return this.authService.updateProfileUserPicture(+id, user, file);
   }
 }

@@ -9,4 +9,5 @@ export declare class RegisterUserDto {
     cantonId: number;
     userId?: number;
     paypalEmail: string;
+    userType?: string;
 }

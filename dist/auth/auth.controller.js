@@ -27,6 +27,7 @@ const client_1 = require("@prisma/client");
 const pipes_1 = require("../common/pipes");
 const filter_user_dto_1 = require("./dto/filter-user.dto");
 const update_payment_methods_dto_1 = require("./dto/update-payment-methods.dto");
+const platform_express_1 = require("@nestjs/platform-express");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -63,6 +64,9 @@ let AuthController = class AuthController {
     }
     remove(id) {
         return this.authService.remove(+id);
+    }
+    updateProfileUserPicture(id, user, file) {
+        return this.authService.updateProfileUserPicture(+id, user, file);
     }
 };
 exports.AuthController = AuthController;
@@ -156,6 +160,23 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Patch)('profile-pic/:id'),
+    (0, decorators_1.Auth)(roles_enum_1.Role.Admin, roles_enum_1.Role.Vendedor),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
+    __param(2, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
+        fileIsRequired: false,
+        validators: [
+            new common_1.MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10, message: 'File is too big' }),
+            new common_1.FileTypeValidator({ fileType: /^(image\/(jpeg|jpg|png|webp))$/ }),
+        ],
+    }))),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "updateProfileUserPicture", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)(['auth', 'users']),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

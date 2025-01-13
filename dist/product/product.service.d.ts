@@ -5,6 +5,7 @@ import { PrismaService } from 'src/config/db/prisma.service';
 import { Prisma } from '@prisma/client';
 export declare class ProductService {
     private readonly product;
+    private readonly user;
     constructor(prismaService: PrismaService);
     create(createProductDto: CreateProductDto, user: Prisma.user_ceGetPayload<{
         include: {
@@ -14,6 +15,11 @@ export declare class ProductService {
         result: {};
         model: {
             $allModels: {
+                softDelete: () => <T>(this: T, { where }: {
+                    where: Prisma.Args<T, "findFirst">["where"];
+                }) => Promise<boolean>;
+            };
+            product: {
                 softDelete: () => <T>(this: T, { where }: {
                     where: Prisma.Args<T, "findFirst">["where"];
                 }) => Promise<boolean>;
@@ -59,11 +65,6 @@ export declare class ProductService {
                 }) => Promise<boolean>;
             };
             predefined_product: {
-                softDelete: () => <T>(this: T, { where }: {
-                    where: Prisma.Args<T, "findFirst">["where"];
-                }) => Promise<boolean>;
-            };
-            product: {
                 softDelete: () => <T>(this: T, { where }: {
                     where: Prisma.Args<T, "findFirst">["where"];
                 }) => Promise<boolean>;
@@ -125,18 +126,18 @@ export declare class ProductService {
             enableShutdownHooks: () => (app: import("@nestjs/common").INestApplication) => Promise<void>;
         };
     }, Prisma.PrismaClientOptions>, "product", "create", never, {}> & import("@prisma/client/runtime/library").PrismaPromise<{
-        status: import("@prisma/client").$Enums.Status | null;
-        modification_date: Date | null;
-        creation_user: string | null;
-        modification_user: string | null;
-        description: string | null;
         id: bigint;
         creation_date: Date | null;
-        price: number;
-        seller_id: bigint;
+        creation_user: string | null;
+        description: string | null;
         image: string | null;
+        modification_date: Date | null;
+        modification_user: string | null;
+        price: number;
+        status: import("@prisma/client").$Enums.Status | null;
         stock: number;
         predefinedProductId: bigint;
+        seller_id: bigint;
         unitOfMeasureId: bigint;
     }>;
     findAll(paginationDto: PaginationDTO): Promise<{
@@ -149,51 +150,51 @@ export declare class ProductService {
                 email: string;
             };
             unitOfMeasure: {
-                status: import("@prisma/client").$Enums.Status | null;
-                modification_date: Date | null;
-                creation_user: string | null;
-                modification_user: string | null;
                 id: bigint;
                 creation_date: Date | null;
+                creation_user: string | null;
+                modification_date: Date | null;
+                modification_user: string | null;
+                status: import("@prisma/client").$Enums.Status | null;
                 name: string | null;
                 abreviature: string | null;
             };
             predefinedProduct: {
                 category: {
-                    status: import("@prisma/client").$Enums.Status | null;
-                    modification_date: Date | null;
-                    creation_user: string | null;
-                    modification_user: string | null;
-                    observation: string | null;
-                    description: string | null;
                     id: bigint;
                     creation_date: Date | null;
+                    creation_user: string | null;
+                    description: string | null;
+                    modification_date: Date | null;
+                    modification_user: string | null;
+                    status: import("@prisma/client").$Enums.Status | null;
+                    observation: string | null;
                     name: string | null;
                 };
             } & {
-                status: import("@prisma/client").$Enums.Status | null;
-                modification_date: Date | null;
-                creation_user: string | null;
-                modification_user: string | null;
-                observation: string | null;
                 id: bigint;
                 creation_date: Date | null;
+                creation_user: string | null;
+                modification_date: Date | null;
+                modification_user: string | null;
+                status: import("@prisma/client").$Enums.Status | null;
+                observation: string | null;
                 name: string | null;
                 category_id: bigint;
             };
         } & {
-            status: import("@prisma/client").$Enums.Status | null;
-            modification_date: Date | null;
-            creation_user: string | null;
-            modification_user: string | null;
-            description: string | null;
             id: bigint;
             creation_date: Date | null;
-            price: number;
-            seller_id: bigint;
+            creation_user: string | null;
+            description: string | null;
             image: string | null;
+            modification_date: Date | null;
+            modification_user: string | null;
+            price: number;
+            status: import("@prisma/client").$Enums.Status | null;
             stock: number;
             predefinedProductId: bigint;
+            seller_id: bigint;
             unitOfMeasureId: bigint;
         })[];
     }>;
@@ -210,53 +211,59 @@ export declare class ProductService {
                 bankTransfersInfo: string;
             };
             unitOfMeasure: {
-                status: import("@prisma/client").$Enums.Status | null;
-                modification_date: Date | null;
-                creation_user: string | null;
-                modification_user: string | null;
                 id: bigint;
                 creation_date: Date | null;
+                creation_user: string | null;
+                modification_date: Date | null;
+                modification_user: string | null;
+                status: import("@prisma/client").$Enums.Status | null;
                 name: string | null;
                 abreviature: string | null;
             };
             predefinedProduct: {
                 category: {
-                    status: import("@prisma/client").$Enums.Status | null;
-                    modification_date: Date | null;
-                    creation_user: string | null;
-                    modification_user: string | null;
-                    observation: string | null;
-                    description: string | null;
                     id: bigint;
                     creation_date: Date | null;
+                    creation_user: string | null;
+                    description: string | null;
+                    modification_date: Date | null;
+                    modification_user: string | null;
+                    status: import("@prisma/client").$Enums.Status | null;
+                    observation: string | null;
                     name: string | null;
                 };
             } & {
-                status: import("@prisma/client").$Enums.Status | null;
-                modification_date: Date | null;
-                creation_user: string | null;
-                modification_user: string | null;
-                observation: string | null;
                 id: bigint;
                 creation_date: Date | null;
+                creation_user: string | null;
+                modification_date: Date | null;
+                modification_user: string | null;
+                status: import("@prisma/client").$Enums.Status | null;
+                observation: string | null;
                 name: string | null;
                 category_id: bigint;
             };
         } & {
-            status: import("@prisma/client").$Enums.Status | null;
-            modification_date: Date | null;
-            creation_user: string | null;
-            modification_user: string | null;
-            description: string | null;
             id: bigint;
             creation_date: Date | null;
-            price: number;
-            seller_id: bigint;
+            creation_user: string | null;
+            description: string | null;
             image: string | null;
+            modification_date: Date | null;
+            modification_user: string | null;
+            price: number;
+            status: import("@prisma/client").$Enums.Status | null;
             stock: number;
             predefinedProductId: bigint;
+            seller_id: bigint;
             unitOfMeasureId: bigint;
         })[];
+        sellerInfo: {
+            id: bigint;
+            name: string;
+            email: string;
+            profilePicture: string;
+        };
     }>;
     findOne(id: number): Promise<{
         user_ce: {
@@ -264,51 +271,51 @@ export declare class ProductService {
             email: string;
         };
         unitOfMeasure: {
-            status: import("@prisma/client").$Enums.Status | null;
-            modification_date: Date | null;
-            creation_user: string | null;
-            modification_user: string | null;
             id: bigint;
             creation_date: Date | null;
+            creation_user: string | null;
+            modification_date: Date | null;
+            modification_user: string | null;
+            status: import("@prisma/client").$Enums.Status | null;
             name: string | null;
             abreviature: string | null;
         };
         predefinedProduct: {
             category: {
-                status: import("@prisma/client").$Enums.Status | null;
-                modification_date: Date | null;
-                creation_user: string | null;
-                modification_user: string | null;
-                observation: string | null;
-                description: string | null;
                 id: bigint;
                 creation_date: Date | null;
+                creation_user: string | null;
+                description: string | null;
+                modification_date: Date | null;
+                modification_user: string | null;
+                status: import("@prisma/client").$Enums.Status | null;
+                observation: string | null;
                 name: string | null;
             };
         } & {
-            status: import("@prisma/client").$Enums.Status | null;
-            modification_date: Date | null;
-            creation_user: string | null;
-            modification_user: string | null;
-            observation: string | null;
             id: bigint;
             creation_date: Date | null;
+            creation_user: string | null;
+            modification_date: Date | null;
+            modification_user: string | null;
+            status: import("@prisma/client").$Enums.Status | null;
+            observation: string | null;
             name: string | null;
             category_id: bigint;
         };
     } & {
-        status: import("@prisma/client").$Enums.Status | null;
-        modification_date: Date | null;
-        creation_user: string | null;
-        modification_user: string | null;
-        description: string | null;
         id: bigint;
         creation_date: Date | null;
-        price: number;
-        seller_id: bigint;
+        creation_user: string | null;
+        description: string | null;
         image: string | null;
+        modification_date: Date | null;
+        modification_user: string | null;
+        price: number;
+        status: import("@prisma/client").$Enums.Status | null;
         stock: number;
         predefinedProductId: bigint;
+        seller_id: bigint;
         unitOfMeasureId: bigint;
     }>;
     update(id: number, updateProductDto: UpdateProductDto, user: Prisma.user_ceGetPayload<{
@@ -316,18 +323,18 @@ export declare class ProductService {
             user_role: true;
         };
     }>, file?: Express.Multer.File | undefined): Promise<{
-        status: import("@prisma/client").$Enums.Status | null;
-        modification_date: Date | null;
-        creation_user: string | null;
-        modification_user: string | null;
-        description: string | null;
         id: bigint;
         creation_date: Date | null;
-        price: number;
-        seller_id: bigint;
+        creation_user: string | null;
+        description: string | null;
         image: string | null;
+        modification_date: Date | null;
+        modification_user: string | null;
+        price: number;
+        status: import("@prisma/client").$Enums.Status | null;
         stock: number;
         predefinedProductId: bigint;
+        seller_id: bigint;
         unitOfMeasureId: bigint;
     }>;
     remove(id: number, user: Prisma.user_ceGetPayload<{

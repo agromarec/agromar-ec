@@ -21,6 +21,11 @@ export class OrderController {
     return this.paymentService.approvePaymentOrder(user, body.paypalClientId, body.transactionId);
   }
 
+  @Post('/payment/bank-transfer')
+  paymentByBankTransfer(@GetUser() user: UserToken) {
+    return this.paymentService.paymentByBankTransfer(user);
+  }
+
   @Get('/orders')
   findAllUserOrders(@GetUser() user: UserToken) {
     return this.paymentService.findAllUserOrders(Number(user.id));

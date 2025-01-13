@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { ArrayMinSize, ArrayNotEmpty, IsArray, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class RegisterUserDto {
   @IsString()
@@ -45,4 +45,8 @@ export class RegisterUserDto {
   @IsString()
   @IsEmail()
   paypalEmail: string;
+
+  @IsString()
+  @IsOptional()
+  userType?: string;
 }

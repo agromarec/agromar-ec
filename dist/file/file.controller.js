@@ -23,6 +23,10 @@ let FileController = class FileController {
         const path = this.fileService.getStaticProductImage(imageName);
         res.sendFile(path);
     }
+    findProfileImage(res, imageName) {
+        const path = this.fileService.getStaticProfileImage(imageName);
+        res.sendFile(path);
+    }
 };
 exports.FileController = FileController;
 __decorate([
@@ -33,6 +37,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], FileController.prototype, "findProductImage", null);
+__decorate([
+    (0, common_1.Get)('/profile-pictures/:imageName'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Param)('imageName')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", void 0)
+], FileController.prototype, "findProfileImage", null);
 exports.FileController = FileController = __decorate([
     (0, common_1.Controller)('file'),
     __metadata("design:paramtypes", [file_service_1.FileService])

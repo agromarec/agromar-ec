@@ -76,4 +76,9 @@ __decorate([
     (0, class_validator_1.IsNumber)({}, { each: true }),
     __metadata("design:type", Array)
 ], CreateUserDto.prototype, "roles", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "userType", void 0);
 //# sourceMappingURL=create-auth.dto.js.map

@@ -4,4 +4,5 @@ export declare class FileController {
     private readonly fileService;
     constructor(fileService: FileService);
     findProductImage(res: Response, imageName: string): void;
+    findProfileImage(res: Response, imageName: string): void;
 }

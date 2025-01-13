@@ -8,13 +8,13 @@ export declare class CartController {
         cart_item: ({
             product: {
                 user_ce: {
-                    status: import("@prisma/client").$Enums.Status | null;
-                    modification_date: Date | null;
+                    creation_date: Date | null;
                     creation_user: string | null;
+                    modification_date: Date | null;
                     modification_user: string | null;
                     observation: string | null;
+                    status: import("@prisma/client").$Enums.Status | null;
                     id: bigint;
-                    creation_date: Date | null;
                     name: string | null;
                     address: string | null;
                     disabled: boolean | null;
@@ -33,15 +33,27 @@ export declare class CartController {
                     allowPaypalPayments: boolean | null;
                     allowBankTransfers: boolean | null;
                     bankTransfersInfo: string | null;
+                    profilePicture: string | null;
+                };
+                predefinedProduct: {
+                    creation_date: Date | null;
+                    creation_user: string | null;
+                    modification_date: Date | null;
+                    modification_user: string | null;
+                    observation: string | null;
+                    status: import("@prisma/client").$Enums.Status | null;
+                    id: bigint;
+                    name: string | null;
+                    category_id: bigint;
                 };
             } & {
-                status: import("@prisma/client").$Enums.Status | null;
-                modification_date: Date | null;
+                creation_date: Date | null;
                 creation_user: string | null;
+                modification_date: Date | null;
                 modification_user: string | null;
+                status: import("@prisma/client").$Enums.Status | null;
                 description: string | null;
                 id: bigint;
-                creation_date: Date | null;
                 price: number;
                 seller_id: bigint;
                 image: string | null;
@@ -58,27 +70,27 @@ export declare class CartController {
             shopping_cart_id: bigint;
         })[];
     } & {
-        status: import("@prisma/client").$Enums.Status | null;
-        modification_date: Date | null;
+        id_shopping_cart: bigint;
+        creation_date: Date | null;
         creation_user: string | null;
+        modification_date: Date | null;
         modification_user: string | null;
         observation: string | null;
-        creation_date: Date | null;
-        user_id: bigint;
+        status: import("@prisma/client").$Enums.Status | null;
         total: number;
-        id_shopping_cart: bigint;
+        user_id: bigint;
     }>;
     update(updateCartDto: UpdateCartDto, user: UserToken): Promise<{
         cart_item: ({
             product: {
                 user_ce: {
-                    status: import("@prisma/client").$Enums.Status | null;
-                    modification_date: Date | null;
+                    creation_date: Date | null;
                     creation_user: string | null;
+                    modification_date: Date | null;
                     modification_user: string | null;
                     observation: string | null;
+                    status: import("@prisma/client").$Enums.Status | null;
                     id: bigint;
-                    creation_date: Date | null;
                     name: string | null;
                     address: string | null;
                     disabled: boolean | null;
@@ -97,15 +109,16 @@ export declare class CartController {
                     allowPaypalPayments: boolean | null;
                     allowBankTransfers: boolean | null;
                     bankTransfersInfo: string | null;
+                    profilePicture: string | null;
                 };
             } & {
-                status: import("@prisma/client").$Enums.Status | null;
-                modification_date: Date | null;
+                creation_date: Date | null;
                 creation_user: string | null;
+                modification_date: Date | null;
                 modification_user: string | null;
+                status: import("@prisma/client").$Enums.Status | null;
                 description: string | null;
                 id: bigint;
-                creation_date: Date | null;
                 price: number;
                 seller_id: bigint;
                 image: string | null;
@@ -122,25 +135,25 @@ export declare class CartController {
             shopping_cart_id: bigint;
         })[];
     } & {
-        status: import("@prisma/client").$Enums.Status | null;
-        modification_date: Date | null;
+        id_shopping_cart: bigint;
+        creation_date: Date | null;
         creation_user: string | null;
+        modification_date: Date | null;
         modification_user: string | null;
         observation: string | null;
-        creation_date: Date | null;
-        user_id: bigint;
+        status: import("@prisma/client").$Enums.Status | null;
         total: number;
-        id_shopping_cart: bigint;
+        user_id: bigint;
     }>;
     remove(id: number): Promise<{
-        status: import("@prisma/client").$Enums.Status | null;
-        modification_date: Date | null;
+        id_shopping_cart: bigint;
+        creation_date: Date | null;
         creation_user: string | null;
+        modification_date: Date | null;
         modification_user: string | null;
         observation: string | null;
-        creation_date: Date | null;
-        user_id: bigint;
+        status: import("@prisma/client").$Enums.Status | null;
         total: number;
-        id_shopping_cart: bigint;
+        user_id: bigint;
     }>;
 }

@@ -13,4 +13,14 @@ export class FileService {
 
     return path;
   }
+
+  getStaticProfileImage(imageName: string) {
+
+    const path = join(__dirname, '../../static/profile-pictures', imageName);
+
+    if (!existsSync(path))
+      throw new BadRequestException(`No product found with image ${imageName}`);
+
+    return path;
+  }
 }

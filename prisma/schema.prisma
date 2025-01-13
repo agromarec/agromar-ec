@@ -275,6 +275,7 @@ model user_ce {
   allowPaypalPayments   Boolean?        @default(false)
   allowBankTransfers    Boolean?        @default(false)
   bankTransfersInfo     String?         @db.Text
+  profilePicture        String?         @db.Text
   comment_ce            comment_ce[]
   order_ce              order_ce[]
   order_detail          order_detail[]

@@ -7,12 +7,12 @@ export declare class ChatController {
     constructor(chatService: ChatService);
     createChat(client: Socket, user: UserToken, body: CreateChatDto): Promise<{
         message_ce: {
-            status: import("@prisma/client").$Enums.Status | null;
-            modification_date: Date | null;
+            creation_date: Date;
             creation_user: bigint;
+            modification_date: Date | null;
             modification_user: string | null;
             observation: string | null;
-            creation_date: Date;
+            status: import("@prisma/client").$Enums.Status | null;
             id_message: bigint;
             text_message: string;
             shipping_date: Date | null;

@@ -76,7 +76,6 @@ let OrderService = class OrderService {
                     paypal_payment_id: transactionId,
                 }
             });
-            console.log({ data: JSON.stringify(data, null, 2) });
             return { transactionId, orderId: order.id_order };
         }
         catch (error) {
@@ -90,7 +89,6 @@ let OrderService = class OrderService {
             throw new common_1.NotFoundException('No se encontro el pedido');
         const order = await this.getOderByTransactionId(transactionId);
         const accessToken = await this.getOAuthToken(paypalClientId);
-        console.log({ accessToken });
         const captureUrl = `https://api.sandbox.paypal.com/v2/checkout/orders/${transactionId}/capture`;
         try {
             await axios_1.default.post(captureUrl, {}, {
@@ -115,7 +113,7 @@ let OrderService = class OrderService {
             const amount = order.total;
             const recipientEmail = 'sb-jdbtg19938552@personal.example.com';
             const payoutUrl = 'https://api-m.sandbox.paypal.com/v1/payments/payouts';
-            const response = await axios_1.default.post(payoutUrl, {
+            await axios_1.default.post(payoutUrl, {
                 sender_batch_header: {
                     email_subject: 'Has recibido un pago',
                     email_message: 'Te hemos enviado un pago desde nuestro e-commerce.',
@@ -138,7 +136,6 @@ let OrderService = class OrderService {
                     'Content-Type': 'application/json',
                 },
             });
-            console.log({ response: JSON.stringify(response.data, null, 2) });
             return orderDetail;
         }
         catch (error) {
@@ -229,6 +226,38 @@ let OrderService = class OrderService {
                 },
             },
         });
+    }
+    async paymentByBankTransfer(user) {
+        const userCart = await this.cartService.getUserCart(Number(user.id));
+        if (!userCart.cart_item.length)
+            throw new common_1.NotFoundException('No se encontro el pedido');
+        try {
+            const order = await this.order_ce.create({
+                data: {
+                    buyer_id: user.id,
+                    creation_date: new Date(),
+                    order_date: new Date(),
+                    total: userCart.total,
+                }
+            });
+            await this.order_detail.createMany({
+                data: userCart.cart_item.map(cartItem => ({
+                    order_id: order.id_order,
+                    seller_id: cartItem.product.seller_id,
+                    product_id: cartItem.product.id,
+                    quantity: cartItem.quantity,
+                    unit_price: cartItem.product.price,
+                    subtotal: cartItem.product.price * cartItem.quantity,
+                    creation_date: new Date(),
+                    status: client_1.Status.Activo,
+                }))
+            });
+            return { orderId: order.id_order };
+        }
+        catch (error) {
+            console.log(error);
+            throw new common_1.InternalServerErrorException('Error al crear el pago');
+        }
     }
     async getOrderById(id) {
         const order = await this.order_ce.findUnique({

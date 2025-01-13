@@ -22,6 +22,12 @@ let SeedController = class SeedController {
     executeUsersSeed() {
         return this.seedService.executeUsersSeed();
     }
+    executeProductsSeed() {
+        return this.seedService.executeProductsSeed();
+    }
+    executeUnitOfMeasuresSeed() {
+        return this.seedService.executeUnitOfMeasuresSeed();
+    }
 };
 exports.SeedController = SeedController;
 __decorate([
@@ -36,6 +42,18 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], SeedController.prototype, "executeUsersSeed", null);
+__decorate([
+    (0, common_1.Get)('products'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SeedController.prototype, "executeProductsSeed", null);
+__decorate([
+    (0, common_1.Get)('unit-of-measure'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SeedController.prototype, "executeUnitOfMeasuresSeed", null);
 exports.SeedController = SeedController = __decorate([
     (0, common_1.Controller)('seed'),
     __metadata("design:paramtypes", [seed_service_1.SeedService])
