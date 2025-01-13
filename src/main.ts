@@ -29,12 +29,21 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // app.enableCors({
+  //   origin: '*',
+  //   methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+  //   credentials: true,
+  //   allowedHeaders: 'Content-Type, Authorization, Content-Length, X-Requested-With',
+  // });
+
+
   app.enableCors({
-    origin: '*',
+    origin: ['http://localhost:5173/', 'http://localhost:3000'], // Especifica el origen permitido
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
-    credentials: true,
+    credentials: true, // Asegúrate de habilitar credenciales si es necesario
     allowedHeaders: 'Content-Type, Authorization, Content-Length, X-Requested-With',
   });
+
 
   app.setGlobalPrefix('api');
 
