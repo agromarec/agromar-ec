@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, Logger, OnModuleDestroy, INestApplication } from '@nestjs/common';
-import { Prisma, PrismaClient, Status } from '@prisma/client';
+import { Prisma, PrismaClient, Status } from '../../prisma';
 
 const INGNORED_FIELDS = ['modification_date', 'creation_user', 'modification_user', 'observation'];
 
