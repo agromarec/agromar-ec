@@ -29,6 +29,14 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+    credentials: true,
+    allowedHeaders: 'Content-Type, Authorization, Content-Length, X-Requested-With',
+  });
+
+  app.setGlobalPrefix('api');
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -36,14 +44,6 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     })
   );
-
-  app.enableCors({
-    origin: '*',
-    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
-    allowedHeaders: 'Content-Type, Authorization',
-  });
-
-  app.setGlobalPrefix('api');
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
