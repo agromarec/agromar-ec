@@ -24,7 +24,7 @@ const roles_enum_1 = require("./enums/roles.enum");
 const update_password_dto_1 = require("./dto/update-password.dto");
 const register_auth_dto_1 = require("./dto/register-auth.dto");
 const client_1 = require("@prisma/client");
-const parse_upper_case_pipe_1 = require("../common/pipes/parse-upper-case.pipe");
+const pipes_1 = require("../common/pipes");
 const filter_user_dto_1 = require("./dto/filter-user.dto");
 const update_payment_methods_dto_1 = require("./dto/update-payment-methods.dto");
 let AuthController = class AuthController {
@@ -98,7 +98,7 @@ __decorate([
 ], AuthController.prototype, "refresh", null);
 __decorate([
     (0, common_1.Get)('getByType/:type'),
-    __param(0, (0, common_1.Param)('type', parse_upper_case_pipe_1.ParseUpperCasePipe)),
+    __param(0, (0, common_1.Param)('type', pipes_1.ParseUpperCasePipe)),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, filter_user_dto_1.FilterUserDto]),

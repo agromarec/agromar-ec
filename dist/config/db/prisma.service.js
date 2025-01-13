@@ -8,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrismaService = exports.serializeData = void 0;
 const common_1 = require("@nestjs/common");
-const client_1 = require("@prisma/client");
+const prisma_1 = require("../../prisma");
 const INGNORED_FIELDS = ['modification_date', 'creation_user', 'modification_user', 'observation'];
 const serializeData = (data) => {
     return JSON.parse(JSON.stringify(data, (key, value) => {
@@ -24,15 +24,15 @@ const serializeData = (data) => {
 exports.serializeData = serializeData;
 function extendPrismaClient() {
     const logger = new common_1.Logger('Prisma');
-    const prisma = new client_1.PrismaClient();
+    const prisma = new prisma_1.PrismaClient();
     return prisma.$extends({
         client: {
             async onModuleInit() {
-                await client_1.Prisma.getExtensionContext(this).$connect();
+                await prisma_1.Prisma.getExtensionContext(this).$connect();
                 logger.log('Database in connected 🚀');
             },
             async enableShutdownHooks(app) {
-                client_1.Prisma.getExtensionContext(prisma).$on('beforeExit', async () => {
+                prisma_1.Prisma.getExtensionContext(prisma).$on('beforeExit', async () => {
                     await app.close();
                 });
             }
@@ -40,10 +40,10 @@ function extendPrismaClient() {
         model: {
             $allModels: {
                 async softDelete({ where }) {
-                    const context = client_1.Prisma.getExtensionContext(this);
+                    const context = prisma_1.Prisma.getExtensionContext(this);
                     const result = await context.update({
                         where,
-                        data: { status: client_1.Status.Eliminado }
+                        data: { status: prisma_1.Status.Eliminado }
                     });
                     return result;
                 },
@@ -58,35 +58,35 @@ function extendPrismaClient() {
                 findFirst({ args, query }) {
                     args.where = {
                         ...args.where,
-                        status: client_1.Status.Activo
+                        status: prisma_1.Status.Activo
                     };
                     return query(args);
                 },
                 findMany({ args, query }) {
                     args.where = {
                         ...args.where,
-                        status: client_1.Status.Activo
+                        status: prisma_1.Status.Activo
                     };
                     return query(args);
                 },
                 findFirstOrThrow({ args, query }) {
                     args.where = {
                         ...args.where,
-                        status: client_1.Status.Activo
+                        status: prisma_1.Status.Activo
                     };
                     return query(args);
                 },
                 findUnique({ args, query }) {
                     args.where = {
                         ...args.where,
-                        status: client_1.Status.Activo
+                        status: prisma_1.Status.Activo
                     };
                     return query(args);
                 },
                 findUniqueOrThrow({ args, query }) {
                     args.where = {
                         ...args.where,
-                        status: client_1.Status.Activo
+                        status: prisma_1.Status.Activo
                     };
                     return query(args);
                 },

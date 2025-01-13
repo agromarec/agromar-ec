@@ -1,5 +1,5 @@
 import { OnModuleInit, OnModuleDestroy, INestApplication } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../prisma';
 export declare const serializeData: <T>(data: any) => T;
 declare function extendPrismaClient(): import("@prisma/client/runtime/library").DynamicClientExtensionThis<Prisma.TypeMap<import("@prisma/client/runtime/library").InternalArgs & {
     result: {};
