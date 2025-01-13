@@ -13,8 +13,8 @@ export const GENERATE_PRODUCT_DATA = (sellerId: number, unitOfMesures: Prisma.un
   const cientoId = unitOfMesures.find(unit => unit.abreviature === 'ciento')?.id;
   const haId = unitOfMesures.find(unit => unit.abreviature === 'ha')?.id;
 
-  const camaroneraId = 28;
-  const favoritaId = 23;
+  const camaroneraId = 17;
+  const favoritaId = 12;
 
   return [
     {
