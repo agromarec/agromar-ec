@@ -14,6 +14,9 @@ export const envSchema = z.object({
   PASSWORD_SALT: z.string().default('10')
     .transform(Number).refine(salt => !isNaN(salt) || salt > 8000, 'Salt no válido'),
   JWT_SECRET: z.string().min(2),
+  CLOUDINARY_CLOUD_NAME: z.string().min(2),
+  CLOUDINARY_API_KEY: z.string().min(2),
+  CLOUDINARY_API_SECRET: z.string().min(2),
 });
 
 

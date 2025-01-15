@@ -4,8 +4,10 @@ import { join } from 'path';
 
 @Injectable()
 export class FileService {
-  getStaticProductImage(imageName: string) {
 
+  constructor() { }
+
+  getStaticProductImage(imageName: string) {
     const path = join(__dirname, '../../static/products', imageName);
 
     if (!existsSync(path))

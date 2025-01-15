@@ -14,9 +14,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { RegisterUserDto } from './dto/register-auth.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
 import { UpdatePaymentMethodsDto } from './dto/update-payment-methods.dto';
-import { UpdateProductDto } from 'src/product/dto/update-product.dto';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { CloudinaryService } from 'src/common/cloudinary/cloudinary.service';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +23,7 @@ export class AuthService {
   constructor(
     private readonly configService: ConfigService<Envs>,
     private readonly jwtService: JwtService,
+    private readonly cloudinaryService: CloudinaryService,
     prisma: PrismaService,
   ) {
     this.user = prisma.user_ce;
@@ -35,11 +34,6 @@ export class AuthService {
     if (user) throw new BadRequestException('Usuario ya existe');
 
     createUserDto.password = await hash(createUserDto.password, this.configService.get('PASSWORD_SALT'));
-
-    console.log({ createUserDto });
-
-
-    throw new BadRequestException('Usuario ya existe');
 
     return await this.user.create({
       include: { user_role: { include: { role_ce: { where: { status: Status.Activo } } } } },
@@ -54,6 +48,7 @@ export class AuthService {
         creation_user: 'system',
         pais_ce: { connect: { id_pais: createUserDto.paisId, } },
         canton_ce: { connect: { id: createUserDto.cantonId, } },
+        userType: <'EMPRESA' | 'GOBIERNO' | 'EMPRESA'>createUserDto.userType || 'CLIENTE',
         user_role: {
           createMany: {
             data: createUserDto.roles.map(roleId => ({ roleId }))
@@ -289,26 +284,35 @@ export class AuthService {
   }
 
 
-  updateProfileUserPicture(id: number, user: UserToken, file: Express.Multer.File) {
-    let fileName = null;
-    console.log({ file, id });
+  async updateProfileUserPicture(id: number, user: UserToken, file: Express.Multer.File) {
+    let assetUrl = null;
 
     if (file) {
-      const directoryPath = join(__dirname, '..', '..', 'static', 'profile-pictures');
-      if (!existsSync(directoryPath)) mkdirSync(directoryPath, { recursive: true }); // recursively create directory for creaet two the firs static and the second products
 
-      const getUuid = crypto.randomUUID.bind(crypto);
-      const fileExtension = file.mimetype.split('/')[1];
-      fileName = `${getUuid()}.${fileExtension}`;
+      // const directoryPath = join(__dirname, '..', '..', 'static', 'profile-pictures');
+      // if (!existsSync(directoryPath)) mkdirSync(directoryPath, { recursive: true }); // recursively create directory for creaet two the firs static and the second products
+
+      // const getUuid = crypto.randomUUID.bind(crypto);
+      // const fileExtension = file.mimetype.split('/')[1];
+      // fileName = `${getUuid()}.${fileExtension}`;
       // save file to disk
-      const filePath = join(directoryPath, fileName);
-      writeFileSync(filePath, file.buffer); // Save file manually after validation
+      // const filePath = join(directoryPath, fileName);
+      // writeFileSync(filePath, file.buffer); // Save file manually after validation
+
+      const result = await this.cloudinaryService.uploadAsset(file, 'image');
+      assetUrl = result.url;
+
+      // delete old image
+      if (user.profilePicture) {
+        const publicAssetId = (user.profilePicture.split('/').pop()).split('.').shift();
+        await this.cloudinaryService.removeAsset(publicAssetId);
+      }
     }
 
     return this.user.update({
       where: { id },
       data: {
-        profilePicture: fileName,
+        profilePicture: assetUrl,
       },
     });
   }

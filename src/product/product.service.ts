@@ -7,13 +7,17 @@ import { join } from 'path';
 import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
 import { Prisma, Status } from '@prisma/client';
 import { Role } from 'src/auth/enums/roles.enum';
+import { CloudinaryService } from 'src/common/cloudinary/cloudinary.service';
 
 @Injectable()
 export class ProductService {
   private readonly product: PrismaService['product'];
   private readonly user: PrismaService['user_ce'];
 
-  constructor(prismaService: PrismaService) {
+  constructor(
+    private readonly cloudinaryService: CloudinaryService,
+    prismaService: PrismaService,
+  ) {
     this.product = prismaService.product;
     this.user = prismaService.user_ce;
   }
@@ -201,33 +205,40 @@ export class ProductService {
       }
     }
 
-    let fileName = null;
+    let assetUrl = null;
     if (file) {
-      const directoryPath = 'static/products';
+      // const directoryPath = 'static/products';
       // const directoryPath = join(__dirname, '..', '..', 'static', 'products');
-      if (!existsSync(directoryPath)) mkdirSync(directoryPath, { recursive: true }); // recursively create directory for creaet two the firs static and the second products
+      // if (!existsSync(directoryPath)) mkdirSync(directoryPath, { recursive: true }); // recursively create directory for creaet two the firs static and the second products
 
       // remove old image
       if (oldProduct.image) {
-        const oldFilePath = join(directoryPath, oldProduct.image);
-        if (existsSync(oldFilePath)) unlinkSync(oldFilePath);
+        const assetPublicId = (oldProduct.image.split('/').pop()).split('.').shift();
+        await this.cloudinaryService.removeAsset(assetPublicId);
+        // const oldFilePath = join(directoryPath, oldProduct.image);
+        // if (existsSync(oldFilePath)) unlinkSync(oldFilePath);
       }
 
-      const getUuid = crypto.randomUUID.bind(crypto);
-      const fileExtension = file.mimetype.split('/')[1];
-      fileName = `${getUuid()}.${fileExtension}`;
+      // const getUuid = crypto.randomUUID.bind(crypto);
+      // const fileExtension = file.mimetype.split('/')[1];
+      // fileName = `${getUuid()}.${fileExtension}`;
       // save file to disk
-      const filePath = join(directoryPath, fileName);
-      writeFileSync(filePath, file.buffer); // Save file manually after validation
+      // const filePath = join(directoryPath, fileName);
+      // writeFileSync(filePath, file.buffer); // Save file manually after validation
+
+      const result = await this.cloudinaryService.uploadAsset(file);
+
+      assetUrl = result.url;
     }
 
     return this.product.update({
       where: { id },
+      include: { predefinedProduct: { include: { category: true } }, unitOfMeasure: true },
       data: {
         description: updateProductDto.description,
         price: updateProductDto.price,
         stock: updateProductDto.stock,
-        image: file ? fileName : oldProduct.image,
+        image: file ? assetUrl : oldProduct.image,
         status: updateProductDto.status,
         creation_user: user.name,
         modification_user: user.name,
