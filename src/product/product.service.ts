@@ -203,7 +203,7 @@ export class ProductService {
 
     let fileName = null;
     if (file) {
-      const directoryPath = './../../static/products';
+      const directoryPath = 'static/products';
       // const directoryPath = join(__dirname, '..', '..', 'static', 'products');
       if (!existsSync(directoryPath)) mkdirSync(directoryPath, { recursive: true }); // recursively create directory for creaet two the firs static and the second products
 
