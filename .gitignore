@@ -23,7 +23,9 @@ dist/
 
 
 # ignore all in static
-/static
+/static/*.jpg
+/static/*.png
+/static/*.jpeg
 
 # IDEs and editors
 /.idea
