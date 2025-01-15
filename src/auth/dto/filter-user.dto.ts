@@ -1,5 +1,5 @@
 import { IsEmail, IsOptional, IsString } from 'class-validator';
-import { PaginationDTO } from 'src/common/dtos/pagination.dto';
+import { PaginationDTO } from '../../common/dtos/pagination.dto';
 
 
 export class FilterUserDto extends PaginationDTO {

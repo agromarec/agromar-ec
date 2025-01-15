@@ -4,10 +4,10 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationDTO } from 'src/common/dtos/pagination.dto';
 import { PrismaService } from 'src/config/db/prisma.service';
 import { join } from 'path';
-import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { Prisma, Status } from '@prisma/client';
 import { Role } from 'src/auth/enums/roles.enum';
-import { CloudinaryService } from 'src/common/cloudinary/cloudinary.service';
+import { CloudinaryService } from '../common/cloudinary/cloudinary.service';
 
 @Injectable()
 export class ProductService {
