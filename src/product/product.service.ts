@@ -43,6 +43,7 @@ export class ProductService {
     }
 
     return this.product.create({
+      include: { predefinedProduct: { include: { category: true } }, unitOfMeasure: true },
       data: {
         description: createProductDto.description,
         price: createProductDto.price,
