@@ -22,18 +22,24 @@ export class ProductService {
     this.user = prismaService.user_ce;
   }
 
-  create(createProductDto: CreateProductDto, user: Prisma.user_ceGetPayload<{ include: { user_role: true } }>, file?: Express.Multer.File | undefined) {
-    let fileName = null;
-    if (file) {
-      const directoryPath = join(__dirname, '..', '..', 'static', 'products');
-      if (!existsSync(directoryPath)) mkdirSync(directoryPath, { recursive: true }); // recursively create directory for creaet two the firs static and the second products
+  async create(createProductDto: CreateProductDto, user: Prisma.user_ceGetPayload<{ include: { user_role: true } }>, file?: Express.Multer.File | undefined) {
+    // let fileName = null;
+    // if (file) {
+    //   const directoryPath = join(__dirname, '..', '..', 'static', 'products');
+    //   if (!existsSync(directoryPath)) mkdirSync(directoryPath, { recursive: true }); // recursively create directory for creaet two the firs static and the second products
 
-      const getUuid = crypto.randomUUID.bind(crypto);
-      const fileExtension = file.mimetype.split('/')[1];
-      fileName = `${getUuid()}.${fileExtension}`;
-      // save file to disk
-      const filePath = join(directoryPath, fileName);
-      writeFileSync(filePath, file.buffer); // Save file manually after validation
+    //   const getUuid = crypto.randomUUID.bind(crypto);
+    //   const fileExtension = file.mimetype.split('/')[1];
+    //   fileName = `${getUuid()}.${fileExtension}`;
+    //   // save file to disk
+    //   const filePath = join(directoryPath, fileName);
+    //   writeFileSync(filePath, file.buffer); // Save file manually after validation
+    // }
+
+    let assetUrl = null;
+    if (file) {
+      const result = await this.cloudinaryService.uploadAsset(file);
+      assetUrl = result.url;
     }
 
     return this.product.create({
@@ -41,7 +47,7 @@ export class ProductService {
         description: createProductDto.description,
         price: createProductDto.price,
         stock: createProductDto.stock,
-        image: fileName,
+        image: assetUrl,
         creation_user: user.name,
         modification_user: user.name,
         unitOfMeasure: { connect: { id: createProductDto.unitOfMeasure } },
