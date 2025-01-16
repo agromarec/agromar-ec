@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 // const allowCors = fn => async (req, res) => {
 //   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -44,6 +45,7 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Authorization, Content-Length, X-Requested-With',
   });
 
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   app.setGlobalPrefix('api');
 

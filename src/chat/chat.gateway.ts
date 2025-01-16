@@ -6,9 +6,9 @@ import { JwtService } from '@nestjs/jwt';
 @WebSocketGateway({
   cors: {
     origin: '*',
-    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     credentials: true, // Asegúrate de habilitar credenciales si es necesario
     allowedHeaders: 'Content-Type, Authorization, Content-Length, X-Requested-With',
+    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
   }
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
