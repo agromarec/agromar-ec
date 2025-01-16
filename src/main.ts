@@ -39,7 +39,7 @@ async function bootstrap() {
 
 
   app.enableCors({
-    origin: '*', // Especifica el origen permitido
+    origin: 'https://agromar-ec.netlify.app', // Especifica el origen permitido
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     credentials: true, // Asegúrate de habilitar credenciales si es necesario
     allowedHeaders: 'Content-Type, Authorization, Content-Length, X-Requested-With',
