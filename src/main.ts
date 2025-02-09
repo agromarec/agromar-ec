@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { IoAdapter } from '@nestjs/platform-socket.io';
 
 // const allowCors = fn => async (req, res) => {
 //   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -39,13 +38,11 @@ async function bootstrap() {
 
 
   app.enableCors({
-    origin: 'https://agromar-ec.netlify.app', // Especifica el origen permitido
+    origin: '*', // Especifica el origen permitido
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     credentials: true, // Asegúrate de habilitar credenciales si es necesario
     allowedHeaders: 'Content-Type, Authorization, Content-Length, X-Requested-With',
   });
-
-  app.useWebSocketAdapter(new IoAdapter(app));
 
   app.setGlobalPrefix('api');
 

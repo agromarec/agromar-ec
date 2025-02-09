@@ -3,11 +3,10 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationDTO } from 'src/common/dtos/pagination.dto';
 import { PrismaService } from 'src/config/db/prisma.service';
-import { join } from 'path';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { Prisma, Status } from '@prisma/client';
 import { Role } from 'src/auth/enums/roles.enum';
 import { CloudinaryService } from '../common/cloudinary/cloudinary.service';
+import { FilterProductsDto } from './dto/filter-products.dto';
 
 @Injectable()
 export class ProductService {
@@ -102,8 +101,17 @@ export class ProductService {
     };
   }
 
-  async findAllBySellerId(paginationDto: PaginationDTO, sellerId: number) {
-    const { page = 1, size = 12 } = paginationDto;
+  async findAllBySellerId(paginationDto: FilterProductsDto, sellerId: number) {
+    const { page = 1, size = 12, ...rest } = paginationDto;
+
+    const user = await this.user.findUnique({ where: { id: sellerId }, include: { user_role: { include: { role_ce: true } } } });
+
+    const isAdmin = user.user_role.some(uRole => Number(uRole.role_ce.id_role) === Role.Admin);
+
+    const validateStock = isAdmin ? {} : { stock: { gt: 0 } };
+
+    const category = rest.category ? { id: { in: rest.category.split(',').map(Number) } } : {};
+    const predefinedProduct = rest.predefinedProduct ? { id: { in: rest.predefinedProduct.split(',').map(Number) } } : {};
 
     const products = await this.product.findMany({
       skip: (page - 1) * size,
@@ -119,10 +127,9 @@ export class ProductService {
       },
       where: {
         seller_id: sellerId,
+        ...validateStock,
         AND: [
-          {
-            predefinedProduct: { category: { status: Status.Activo } },
-          },
+          { predefinedProduct: { category: { status: Status.Activo, ...category }, ...predefinedProduct } },
           {
             predefinedProduct: { status: Status.Activo },
             unitOfMeasure: { status: Status.Activo },
@@ -133,7 +140,20 @@ export class ProductService {
       orderBy: { creation_date: 'desc' },
     });
 
-    const totalProducts = await this.product.count({ where: { seller_id: sellerId, status: Status.Activo } });
+    const totalProducts = await this.product.count({
+      where: {
+        seller_id: sellerId,
+        ...validateStock,
+        AND: [
+          { predefinedProduct: { category: { status: Status.Activo, ...category }, ...predefinedProduct } },
+          {
+            predefinedProduct: { status: Status.Activo },
+            unitOfMeasure: { status: Status.Activo },
+            user_ce: { status: Status.Activo },
+          }
+        ]
+      }
+    });
 
     const totalPages = Math.ceil(totalProducts / size);
     const hasMore = page < totalPages;
@@ -251,7 +271,7 @@ export class ProductService {
         modification_user: user.name,
         unitOfMeasure: { connect: { id: updateProductDto.unitOfMeasure } },
         predefinedProduct: { connect: { id: updateProductDto.predefinedProduct } },
-        user_ce: { connect: { id: user.id } },
+        // user_ce: { connect: { id: user.id } },
       }
     });
   }

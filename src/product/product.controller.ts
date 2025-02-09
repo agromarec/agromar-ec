@@ -8,6 +8,7 @@ import { Role } from 'src/auth/enums/roles.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { Prisma } from '@prisma/client';
+import { FilterProductsDto } from './dto/filter-products.dto';
 
 @Controller('products')
 export class ProductController {
@@ -43,7 +44,7 @@ export class ProductController {
   @Auth(Role.Admin, Role.Vendedor)
   findAllBySeller(
     @Param('id', ParseIntPipe) sellerId: number,
-    @Query() paginationDto: PaginationDTO,
+    @Query() paginationDto: FilterProductsDto,
   ) {
     return this.productService.findAllBySellerId(paginationDto, sellerId);
   }

@@ -11,6 +11,7 @@ export class OrderService {
   private readonly cart: PrismaService['shopping_cart'];
   private readonly order_ce: PrismaService['order_ce'];
   private readonly order_detail: PrismaService['order_detail'];
+  private readonly product: PrismaService['product'];
 
   constructor(
     prismaService: PrismaService,
@@ -19,6 +20,7 @@ export class OrderService {
     this.cart = prismaService.shopping_cart;
     this.order_ce = prismaService.order_ce;
     this.order_detail = prismaService.order_detail;
+    this.product = prismaService.product;
   }
 
   private async getOAuthToken(userName: string) {
@@ -295,6 +297,15 @@ export class OrderService {
           status: Status.Activo,
         }))
       });
+
+      const promises = userCart.cart_item.map(cartItem => {
+        return this.product.update({
+          where: { id: cartItem.product.id },
+          data: { stock: cartItem.product.stock - cartItem.quantity }
+        });
+      });
+
+      await Promise.all(promises);
 
       return { orderId: order.id_order };
     } catch (error) {
